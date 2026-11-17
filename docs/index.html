@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shard Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--glass:rgba(255,255,255,.05);--line:rgba(255,255,255,.14);--tx:#f5f5f5;--mu:#8a8a8a;--ac:#f5f5f5;--common:#5f5f5f;--rare:#8f8f8f;--epic:#c4c4c4;--legendary:#ffffff;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px 80px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.btn{background:#f5f5f5;color:#000;font-weight:600;padding:12px 20px;border-radius:14px;min-height:46px;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.96)}.btn:hover{opacity:.85}
+.btn.ghost{background:var(--glass);border:1px solid var(--line);color:var(--tx)}.btn.sm{padding:9px 16px;min-height:40px;font-size:14px}
+svg.gem{width:1em;height:1em;vertical-align:-.12em;fill:currentColor}
+
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:24px;text-align:center}
+#login .box{padding:48px 36px;max-width:420px}
+.logo{font-size:44px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#fff,#6a6a6a);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0 0 6px}
+.mu{color:var(--mu)}
+
+/* header + profile */
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.brand{font-weight:800;font-size:22px;letter-spacing:-.5px}
+.profile{padding:24px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:18px}
+.avatar{width:84px;height:84px;border-radius:50%;background:#1c1c1c;border:1px solid var(--line);display:grid;place-items:center;font-size:34px;font-weight:700;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.name{font-size:26px;font-weight:700;margin:0}
+.rank{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:99px;font-size:13px;font-weight:600;background:var(--glass);border:1px solid var(--line)}
+.bar{height:8px;border-radius:9px;background:rgba(255,255,255,.08);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:9px;background:#f5f5f5;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.barlbl{font-size:12px;color:var(--mu);margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px}
+.stat{padding:16px 18px}.stat b{display:block;font-size:26px;font-weight:700;margin-top:2px}.stat span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.dots{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+
+/* tabs */
+.tabs{display:flex;padding:5px;gap:4px;margin-bottom:18px;position:sticky;top:8px;z-index:5}
+.tabs button{flex:1;padding:12px;border-radius:17px;background:transparent;color:var(--mu);font-weight:600;transition:.2s}
+.tabs button.on{background:#f5f5f5;color:#000}
+.tool{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tool input,.tool select{background:var(--glass);border:1px solid var(--line);color:var(--tx);font:inherit;padding:12px 16px;border-radius:14px;outline:0;min-height:46px}
+.tool input{flex:1;min-width:160px}.tool input:focus{border-color:var(--ac)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:8px 16px;border-radius:99px;background:var(--glass);border:1px solid var(--line);font-size:14px;font-weight:500;color:var(--mu)}
+.chip.on{color:#fff;border-color:var(--c,var(--ac))}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;perspective:900px}
+.card{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:3/4.3;cursor:pointer;background:#14142a;
+border:1.5px solid var(--c);
+transform:rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .25s,box-shadow .25s;animation:pop .5s both}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.94)}}
+.card:hover{border-color:#fff}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .ov{position:absolute;inset:auto 0 0;padding:12px;background:rgba(0,0,0,.82)}
+.card .nm{font-weight:700;font-size:15px;line-height:1.2}.card .sr{font-size:12px;color:var(--mu);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:rgba(0,0,0,.8);color:var(--c);border:1px solid var(--c)}
+.common{--c:var(--common)}.rare{--c:var(--rare)}.epic{--c:var(--epic)}.legendary{--c:var(--legendary)}
+.legendary .nm{text-shadow:0 0 12px rgba(255,255,255,.75)}
+.sk{aspect-ratio:3/4.3;border-radius:20px;background:rgba(255,255,255,.07);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.4}}
+
+/* items + shop */
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.slot{padding:14px 16px}.slot small{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}.slot b{display:block;margin-top:4px;font-weight:600}.slot.empty b{color:var(--mu);font-weight:400}
+.row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 18px;margin-bottom:12px}
+.row h4{margin:0 0 4px;font-size:17px}.row p{margin:0;color:var(--mu);font-size:14px}
+.sc{display:inline-block;margin:8px 6px 0 0;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;background:rgba(255,255,255,.1);color:#ddd}
+.sec{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);margin:22px 4px 12px}
+.empty{text-align:center;color:var(--mu);padding:60px 20px;grid-column:1/-1}
+
+/* modal + toast */
+#modal{position:fixed;inset:0;z-index:20;display:none;place-items:center;padding:20px;background:rgba(3,3,10,.75);backdrop-filter:blur(8px)}
+#modal.show{display:grid;animation:fade .2s}@keyframes fade{from{opacity:0}}
+.mbox{max-width:760px;width:100%;max-height:90vh;overflow:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border:1.5px solid var(--c);animation:pop .35s both}
+.mbox img{width:100%;height:100%;object-fit:cover;min-height:340px}.mbox .info{padding:28px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.mbox.legendary h2{text-shadow:0 0 14px rgba(255,255,255,.7)}.mbox h2{margin:0;font-size:30px;line-height:1.1}.big{font-size:14px;color:var(--c);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.kv{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,120px);padding:14px 22px;border-radius:16px;font-weight:600;z-index:30;transition:transform .35s cubic-bezier(.2,.9,.3,1.2);background:rgba(25,25,50,.95);border:1px solid var(--line)}
+#toast.show{transform:translate(-50%,0)}
+@media(max-width:620px){.profile{grid-template-columns:1fr;text-align:center;justify-items:center}.mbox{grid-template-columns:1fr}.mbox img{min-height:260px;max-height:340px}.row{flex-wrap:wrap}}
+</style></head>
+<body>
+<div id="login" hidden><div class="box glass"><h1 class="logo">Shard Vault</h1><p class="mu" style="margin:0 0 28px">Sign in with Discord to open your collection.</p><button class="btn" onclick="login()">Continue with Discord</button></div></div>
+
+<div id="app" class="wrap" hidden>
+<header><div class="brand">Shard Vault</div><button class="btn ghost sm" onclick="logout()">Log out</button></header>
+<section class="profile glass"><div class="avatar" id="av"></div><div style="width:100%"><h2 class="name" id="who"></h2><span class="rank" id="rk"></span>
+<div class="bar"><i id="xpb"></i></div><div class="barlbl" id="xpl"></div></div></section>
+<section class="stats" id="stats"></section>
+<nav class="tabs glass"><button id="t1" onclick="tab(1)">Collection</button><button id="t2" onclick="tab(2)">Items &amp; Gear</button><button id="t3" onclick="tab(3)">Shop</button></nav>
+
+<div id="v1"><div class="tool"><input id="q" placeholder="Search characters or series" oninput="render()">
+<select id="sort" onchange="render()"><option value="new">Newest</option><option value="rar">Rarity</option><option value="name">Name</option><option value="val">Value</option></select></div>
+<div class="chips" id="chips"></div><div class="grid" id="grid"></div></div>
+<div id="v2" hidden></div><div id="v3" hidden></div>
+</div>
+
+<div id="modal" onclick="if(event.target===this)closeM()"></div><div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL = "https://xiidpjabyqcpmohexjct.supabase.co", SUPABASE_ANON_KEY = "sb_publishable_VsetPnjEU8X7k2oXPtZfzg_0tWZfY3s";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const RANKS=[[0,"Bronze"],[50,"Silver"],[200,"Gold"],[500,"Platinum"],[1200,"Diamond"],[3000,"Mythic"]];
+const ORDER={legendary:0,epic:1,rare:2,common:3}, SLOTS=["weapon","armor","ring","charm","trinket"];
+const GEM='<svg class="gem" viewBox="0 0 24 24"><path d="M12 2 21 9 12 22 3 9z"/></svg>';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const S={u:null,chars:[],items:[],mine:{},filter:"all",user:null};
+function login(){sb.auth.signInWithOAuth({provider:"discord",options:{redirectTo:location.href.split("#")[0]}})}
+async function logout(){await sb.auth.signOut();location.reload()}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2600)}
+function tab(n){[1,2,3].forEach(i=>{$("v"+i).hidden=i!==n;$("t"+i).classList.toggle("on",i===n)})}
+async function act(fn,id){const{data,error}=await sb.rpc(fn,{p_item:id});if(error||data?.ok===false)toast(data?.error||"Something went wrong");else toast(fn==="shop_buy"?"Purchased":fn==="use_item"?"Used":(data?.equipped?"Equipped":"Unequipped"));await load()}
+
+function stats(i){return [i.slot&&`<span class="sc">${esc(i.slot)}</span>`,i.luck>0&&`<span class="sc">+${i.luck}% legendary odds</span>`,i.shard_pct>0&&`<span class="sc">+${i.shard_pct}% shards</span>`].filter(Boolean).join("")}
+function render(){
+  const q=$("q").value.toLowerCase(),sort=$("sort").value;
+  let l=S.chars.filter(c=>(S.filter==="all"||c.rarity===S.filter)&&(c.name+" "+(c.series||"")).toLowerCase().includes(q));
+  if(sort==="rar")l.sort((a,b)=>ORDER[a.rarity]-ORDER[b.rarity]);if(sort==="name")l.sort((a,b)=>a.name.localeCompare(b.name));if(sort==="val")l.sort((a,b)=>b.price-a.price);
+  $("grid").innerHTML=l.map((c,k)=>`<div class="card ${c.rarity}" style="animation-delay:${Math.min(k,20)*30}ms" onclick="openM(${S.chars.indexOf(c)})" onpointermove="tilt(event,this)" onpointerleave="this.style.removeProperty('--rx');this.style.removeProperty('--ry')">
+  <img loading="lazy" src="${esc(c.image_url)}" alt=""><span class="tag">${c.rarity}</span><div class="ov"><div class="nm">${esc(c.name)}</div><div class="sr">${esc(c.series)}</div></div></div>`).join("")
+  ||`<div class="empty">${S.chars.length?"No matches.":"Your collection is empty. Use /roll in Discord, then /buy to keep a character."}</div>`;
+}
+function tilt(e,el){const r=el.getBoundingClientRect();el.style.setProperty("--ry",((e.clientX-r.left)/r.width-.5)*10+"deg");el.style.setProperty("--rx",(.5-(e.clientY-r.top)/r.height)*10+"deg")}
+function openM(i){const c=S.chars[i];$("modal").innerHTML=`<div class="mbox glass ${c.rarity}"><img src="${esc(c.image_url)}" alt=""><div class="info"><div class="big">${c.rarity}</div><h2>${esc(c.name)}</h2><div class="mu">${esc(c.series)}</div>
+  <div style="margin-top:14px"><div class="kv"><span class="mu">Value</span><b>${GEM} ${c.price}</b></div><div class="kv"><span class="mu">Sells for</span><b>${GEM} ${Math.floor(c.price/2)}</b></div></div>
+  <p class="mu" style="font-size:13px;margin:8px 0">To sell or trade, use /sell or /trade in Discord.</p><button class="btn" onclick="closeM()">Close</button></div></div>`;$("modal").classList.add("show")}
+function closeM(){$("modal").classList.remove("show")}
+addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+
+async function load(){
+  const [a,b,c,d]=await Promise.all([sb.from("users").select("*").maybeSingle(),
+    sb.from("inventory").select("acquired_at,characters(name,series,image_url,rarity,price)").order("acquired_at",{ascending:false}),
+    sb.from("items").select("*").order("price"),sb.from("user_items").select("*")]);
+  const u=a.data;S.u=u;$("who").textContent=u?.username||S.user?.user_metadata?.full_name||"Collector";
+  if(!u){$("rk").textContent="New";$("xpl").textContent="Use /roll in Discord to begin";$("grid").innerHTML='<div class="empty">Nothing here yet. Use /roll in Discord to start your collection.</div>';return}
+  let r=0;RANKS.forEach((x,k)=>{if(u.xp>=x[0])r=k});const cur=RANKS[r],nx=RANKS[r+1];
+  $("rk").textContent=cur[1];$("xpb").style.width=(nx?Math.round((u.xp-cur[0])/(nx[0]-cur[0])*100):100)+"%";
+  $("xpl").textContent=nx?`${u.xp} / ${nx[0]} XP to ${nx[1]}`:`${u.xp} XP, max rank`;
+  S.chars=(b.data||[]).map(x=>x.characters);S.items=c.data||[];S.mine=Object.fromEntries((d.data||[]).map(m=>[m.item_id,m]));
+  const cnt=k=>S.chars.filter(x=>x.rarity===k).length;
+  $("stats").innerHTML=`<div class="stat glass"><span>Shards</span><b>${GEM} ${u.shards}</b></div><div class="stat glass"><span>Characters</span><b>${S.chars.length}</b></div>
+  <div class="stat glass"><span>Collection</span><div class="dots">${["legendary","epic","rare","common"].map(k=>`<span style="font-size:14px;color:var(--${k});font-weight:600">${k[0].toUpperCase()} ${cnt(k)}</span>`).join("")}</div></div>
+  <div class="stat glass"><span>Active buffs</span><b style="font-size:16px;margin-top:8px">${[u.luck_rolls&&u.luck_rolls+" lucky",u.guaranteed&&u.guaranteed+" epic+",u.shard_rolls&&u.shard_rolls+" 5x"].filter(Boolean).join(", ")||"None"}</b></div>`;
+  $("chips").innerHTML=["all","legendary","epic","rare","common"].map(k=>`<button class="chip ${k} ${S.filter===k?"on":""}" onclick="S.filter='${k}';load2()">${k==="all"?"All "+S.chars.length:k[0].toUpperCase()+k.slice(1)+" "+cnt(k)}</button>`).join("");
+  render();
+  const own=S.items.filter(i=>S.mine[i.id]?.qty>0),gear=own.filter(i=>i.slot),pot=own.filter(i=>!i.slot);
+  const eq=Object.fromEntries(gear.filter(i=>S.mine[i.id].equipped).map(i=>[i.slot,i]));
+  $("v2").innerHTML=`<div class="sec">Equipped</div><div class="slots">${SLOTS.map(s=>`<div class="slot glass ${eq[s]?"":"empty"}"><small>${s}</small><b>${eq[s]?esc(eq[s].name):"Empty"}</b></div>`).join("")}</div>
+  <div class="sec">Gear</div>${gear.map(i=>`<div class="row glass"><div><h4>${esc(i.name)}</h4><p>${esc(i.description)}</p>${stats(i)}</div><button class="btn sm ${S.mine[i.id].equipped?"ghost":""}" onclick="act('toggle_equip','${i.id}')">${S.mine[i.id].equipped?"Unequip":"Equip"}</button></div>`).join("")||'<p class="mu">No gear yet. Visit the shop.</p>'}
+  <div class="sec">Potions</div>${pot.map(i=>`<div class="row glass"><div><h4>${esc(i.name)} <span class="mu">x${S.mine[i.id].qty}</span></h4><p>${esc(i.description)}</p></div><button class="btn sm" onclick="act('use_item','${i.id}')">Use</button></div>`).join("")||'<p class="mu">No potions yet.</p>'}`;
+  $("v3").innerHTML=S.items.map(i=>`<div class="row glass"><div><h4>${esc(i.name)}${S.mine[i.id]?.qty?` <span class="mu">owned ${S.mine[i.id].qty}</span>`:""}</h4><p>${esc(i.description)}</p>${stats(i)}</div><button class="btn sm" onclick="act('shop_buy','${i.id}')">${GEM} ${i.price}</button></div>`).join("");
+}
+const load2=()=>{document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.classList.contains(S.filter)));render()};
+(async()=>{const{data:{session}}=await sb.auth.getSession();
+  if(!session){$("login").hidden=false;return}
+  S.user=session.user;$("app").hidden=false;tab(1);
+  const m=session.user.user_metadata||{};$("av").innerHTML=m.avatar_url?`<img src="${esc(m.avatar_url)}" alt="">`:esc((m.full_name||"?")[0]);
+  $("grid").innerHTML=Array(8).fill('<div class="sk"></div>').join("");load()})();
+</script></body></html>
